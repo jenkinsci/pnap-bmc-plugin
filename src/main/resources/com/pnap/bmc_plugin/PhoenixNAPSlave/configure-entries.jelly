@@ -1,0 +1,27 @@
+
+
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <table width="100%">
+
+        <f:entry title="Label" field="labelString">
+            <f:textbox/>
+        </f:entry>
+
+        <f:entry title="Number of executors" field="numExecutors">
+            <f:textbox disabled="true"/>
+        </f:entry>
+
+      <f:entry field="templateName" title="Template name">
+        <f:select disabled="true"/>
+    </f:entry>
+    
+     <f:entry title="Server ID" field="provisionedServerID" >
+            <f:textbox disabled="true"/>
+     </f:entry>
+
+    </table>
+
+</j:jelly>

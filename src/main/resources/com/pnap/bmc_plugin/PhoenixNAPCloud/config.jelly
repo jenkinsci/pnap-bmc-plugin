@@ -1,0 +1,32 @@
+<?jelly escape-by-default='true'?>
+
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="Unique name" field="name">
+        <f:textbox/>
+    </f:entry>
+
+    <f:entry title="Instance cap" field="instanceCap">
+        <f:textbox default="5"/>
+    </f:entry>
+
+    <f:entry title="Timeout in minutes" field="timeoutMinutes">
+        <f:textbox default="5"/>
+    </f:entry>
+
+    <f:entry title="Connection retry wait in seconds" field="connectionRetryWait">
+        <f:textbox default="10"/>
+    </f:entry>
+
+    <f:entry title="Templates" description="List of templates which can be launched as slaves">
+        <!-- Defines a header so the repeats can be re-ordered -->
+        <f:repeatableProperty field="templates" header="Template">
+            <f:entry title="">
+                <div align="right">
+                    <f:repeatableDeleteButton/>
+                </div>
+            </f:entry>
+        </f:repeatableProperty>
+    </f:entry>
+
+</j:jelly>

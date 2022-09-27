@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+  This plugin enables Jenkins to provision slaves on PhoenixNAP cloud on demand.
+</div>

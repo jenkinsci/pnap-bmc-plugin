@@ -55,8 +55,9 @@ import jenkins.model.Jenkins;
  * @author pavlej
  *
  */
-public class PhoenixNAPSlave extends AbstractCloudSlave implements TrackedItem {
+public final class PhoenixNAPSlave extends AbstractCloudSlave implements TrackedItem {
 
+    private static final int BUFFER_SIZE = 4;
     private final ProvisioningActivity.Id provisioningId;
     private final PhoenixNAPSlaveTemplate template;
     private String provisionedServerID;
@@ -306,11 +307,11 @@ public class PhoenixNAPSlave extends AbstractCloudSlave implements TrackedItem {
 
     private byte[] getSshPublicKeyBody(RSAPublicKey rsaPubKey) throws IOException {
         byte[] algorithmName = "ssh-rsa".getBytes("UTF-8");
-        byte[] algorithmNameLength = ByteBuffer.allocate(4).putInt(algorithmName.length).array();
+        byte[] algorithmNameLength = ByteBuffer.allocate(BUFFER_SIZE).putInt(algorithmName.length).array();
         byte[] e = rsaPubKey.getPublicExponent().toByteArray(); // Usually 65,537
-        byte[] eLength = ByteBuffer.allocate(4).putInt(e.length).array();
+        byte[] eLength = ByteBuffer.allocate(BUFFER_SIZE).putInt(e.length).array();
         byte[] m = rsaPubKey.getModulus().toByteArray();
-        byte[] mLength = ByteBuffer.allocate(4).putInt(m.length).array();
+        byte[] mLength = ByteBuffer.allocate(BUFFER_SIZE).putInt(m.length).array();
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         os.write(algorithmNameLength);

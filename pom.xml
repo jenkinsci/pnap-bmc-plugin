@@ -202,7 +202,7 @@
 	<artifactId>maven-checkstyle-plugin</artifactId>
 	 <version>3.1.2</version>
 	<configuration>
-		<configLocation>C:\Users\pavlej\work\Code\Code\pnap-bmc-jenkins-plugin\src\main\resources\checkstyle-pnap.xml</configLocation>
+		<configLocation>${project.basedir}/src/main/resources/checkstyle-pnap.xml</configLocation>
 	</configuration>
 </plugin>
 		</plugins>

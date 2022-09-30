@@ -70,7 +70,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
      * this.provisioningId = provisioningId; // TODO Auto-generated constructor stub
      * }
      */
-    public PhoenixNAPSlave(PhoenixNAPSlaveTemplate template) throws Exception {
+    public PhoenixNAPSlave(final PhoenixNAPSlaveTemplate template) throws Exception {
         super(template.getName(), template.resolveFS(), template.resolveLauncher());
 
         String serverName = generateServerName(template.getCloud().getName(), template.getName());
@@ -88,8 +88,8 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
     }
 
     @DataBoundConstructor
-    public PhoenixNAPSlave(String name, String templateName, String numExecutors, String labelString,
-            String provisionedServerID) throws Exception {
+    public PhoenixNAPSlave(final String name, final String templateName, final String numExecutors, final String labelString,
+            final String provisionedServerID) throws Exception {
         super(name, getTemplateByName(templateName).resolveFS(), getTemplateByName(templateName).resolveLauncher());
         this.template = getTemplateByName(templateName);
         this.templateName = template.getName();
@@ -106,12 +106,12 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
     }
 
     @Override
-    protected void _terminate(TaskListener listener) throws IOException, InterruptedException {
+    protected void _terminate(final TaskListener listener) throws IOException, InterruptedException {
         deleteServer();
     }
 
     @Extension
-    public static class DescriptorImpl extends SlaveDescriptor {
+    public static final class DescriptorImpl extends SlaveDescriptor {
         @Nonnull
         @Override
         public String getDisplayName() {
@@ -224,7 +224,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
     }
 
     @CheckForNull
-    private PhoenixNAPCloudCredentialsImpl getCredentials(@CheckForNull String credentialsId) {
+    private PhoenixNAPCloudCredentialsImpl getCredentials(@CheckForNull final String credentialsId) {
         if (StringUtils.isBlank(credentialsId)) {
             return null;
         }
@@ -234,7 +234,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
     }
 
     @CheckForNull
-    private SSHUserPrivateKey getSshCredentials(@CheckForNull String credentialsId) {
+    private SSHUserPrivateKey getSshCredentials(@CheckForNull final String credentialsId) {
         if (StringUtils.isBlank(credentialsId)) {
             return null;
         }
@@ -274,7 +274,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return template;
     }
 
-    private String getPublicKey(String privateSshKey, String privateSshKeyPassphrase)
+    private String getPublicKey(final String privateSshKey, final String privateSshKeyPassphrase)
             throws IOException, NotImplementedException {
 
         PEMKeyPair keyPair;
@@ -305,7 +305,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return "ssh-rsa " + b64PubkeyBody;
     }
 
-    private byte[] getSshPublicKeyBody(RSAPublicKey rsaPubKey) throws IOException {
+    private byte[] getSshPublicKeyBody(final RSAPublicKey rsaPubKey) throws IOException {
         byte[] algorithmName = "ssh-rsa".getBytes("UTF-8");
         byte[] algorithmNameLength = ByteBuffer.allocate(BUFFER_SIZE).putInt(algorithmName.length).array();
         byte[] e = rsaPubKey.getPublicExponent().toByteArray(); // Usually 65,537
@@ -324,7 +324,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return os.toByteArray();
     }
 
-    private static PhoenixNAPSlaveTemplate getTemplateByName(String templateName) {
+    private static PhoenixNAPSlaveTemplate getTemplateByName(final String templateName) {
         final List<Cloud> clouds = Jenkins.get().clouds;
         // Cloud cloud = clouds.getCloud(name);
         for (Cloud cloud : clouds) {
@@ -345,7 +345,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return templateName;
     }
 
-    public void setTemplateName(String templateName) {
+    public void setTemplateName(final String templateName) {
         this.templateName = templateName;
     }
 
@@ -353,7 +353,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return provisionedServerID;
     }
 
-    public void setProvisionedServerID(String provisionedServerID) {
+    public void setProvisionedServerID(final String provisionedServerID) {
         this.provisionedServerID = provisionedServerID;
     }
 

@@ -56,12 +56,12 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
     private static final Logger LOGGER = Logger.getLogger(PhoenixNAPSlaveTemplate.class.getName());
 
     @DataBoundConstructor
-    public PhoenixNAPSlaveTemplate(String name, String hostName, String location, String type, String operatingSystem,
-            String sshPort, String idleTerminationInMinutes, String numExecutors, String labelString,
-            Boolean labellessJobsAllowed, String credentialsId, String sshCredentialsId) {
+    public PhoenixNAPSlaveTemplate(final String name, final String hostName, final String location, final String type, final String operatingSystem,
+            final String sshPort, final String idleTerminationInMinutes, final String numExecutors, final String labelString,
+            final Boolean labellessJobsAllowed, final String credentialsId, final String sshCredentialsId) {
 
         LOGGER.log(Level.INFO, "Creating PhoenixNAPSlaveTemplate with name = {0}, location = {1}, type = {2}",
-                new Object[] { name, location, type });
+                new Object[] {name, location, type});
 
         this.name = name;
         this.hostName = hostName;
@@ -96,8 +96,8 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
             return "phoenixNAP Slave Template";
         }
 
-        public ListBoxModel doFillCredentialsIdItems(@AncestorInPath Item context,
-                @QueryParameter String credentialsId) {
+        public ListBoxModel doFillCredentialsIdItems(@AncestorInPath final Item context,
+                @QueryParameter final String credentialsId) {
             StandardListBoxModel result = new StandardListBoxModel();
             Jenkins instance = Jenkins.getInstanceOrNull();
             if (context != null && instance != null) {
@@ -117,8 +117,8 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
                     domainRequirements, anyOf(instanceOf(PhoenixNAPCloudCredentialsImpl.class)));
         }
 
-        public ListBoxModel doFillSshCredentialsIdItems(@AncestorInPath Item context,
-                @QueryParameter String sshCredentialsId) {
+        public ListBoxModel doFillSshCredentialsIdItems(@AncestorInPath final Item context,
+                @QueryParameter final String sshCredentialsId) {
             StandardListBoxModel result = new StandardListBoxModel();
             Jenkins instance = Jenkins.getInstanceOrNull();
             if (context == null) {
@@ -185,7 +185,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
             return location;
         }
 
-        public FormValidation doCheckHostName(@QueryParameter String value) {
+        public FormValidation doCheckHostName(@QueryParameter final String value) {
             if (value == null || "".equals(value)) {
                 return FormValidation.error("Must not be empty!");
             } else {
@@ -193,7 +193,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
             }
         }
 
-        public FormValidation doCheckName(@QueryParameter String value) {
+        public FormValidation doCheckName(@QueryParameter final String value) {
             if (value == null || "".equals(value)) {
                 return FormValidation.error("Must not be empty!");
             } else {
@@ -201,7 +201,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
             }
         }
 
-        public FormValidation doCheckNumExecutors(@QueryParameter String value) throws IOException, ServletException {
+        public FormValidation doCheckNumExecutors(@QueryParameter final String value) throws IOException, ServletException {
             try {
                 Integer.parseInt(value);
                 return FormValidation.ok();
@@ -210,7 +210,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
             }
         }
 
-        public FormValidation doCheckIdleTerminationInMinutes(@QueryParameter String value)
+        public FormValidation doCheckIdleTerminationInMinutes(@QueryParameter final String value)
                 throws IOException, ServletException {
             try {
                 Integer.parseInt(value);
@@ -225,7 +225,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -233,7 +233,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(final String location) {
         this.location = location;
     }
 
@@ -241,7 +241,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return sshPort;
     }
 
-    public void setSshPort(String sshPort) {
+    public void setSshPort(final String sshPort) {
         this.sshPort = sshPort;
     }
 
@@ -249,7 +249,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return idleTerminationInMinutes;
     }
 
-    public void setIdleTerminationInMinutes(String idleTerminationInMinutes) {
+    public void setIdleTerminationInMinutes(final String idleTerminationInMinutes) {
         this.idleTerminationInMinutes = idleTerminationInMinutes;
     }
 
@@ -257,7 +257,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
     }
 
@@ -265,7 +265,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return operatingSystem;
     }
 
-    public void setOperatingSystem(String operatingSystem) {
+    public void setOperatingSystem(final String operatingSystem) {
         this.operatingSystem = operatingSystem;
     }
 
@@ -273,7 +273,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return numExecutors;
     }
 
-    public void setNumExecutors(String numExecutors) {
+    public void setNumExecutors(final String numExecutors) {
         this.numExecutors = numExecutors;
     }
 
@@ -281,7 +281,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return labelString;
     }
 
-    public void setLabelString(String labelString) {
+    public void setLabelString(final String labelString) {
         this.labelString = labelString;
     }
 
@@ -289,7 +289,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return labellessJobsAllowed;
     }
 
-    public void setLabellessJobsAllowed(Boolean labellessJobsAllowed) {
+    public void setLabellessJobsAllowed(final Boolean labellessJobsAllowed) {
         this.labellessJobsAllowed = labellessJobsAllowed;
     }
 
@@ -297,7 +297,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return credentialsId;
     }
 
-    public void setCredentialsId(String credentialsId) {
+    public void setCredentialsId(final String credentialsId) {
         this.credentialsId = credentialsId;
     }
 
@@ -305,7 +305,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return sshCredentialsId;
     }
 
-    public void setSshCredentialsId(String sshCredentialsId) {
+    public void setSshCredentialsId(final String sshCredentialsId) {
         this.sshCredentialsId = sshCredentialsId;
     }
 
@@ -362,7 +362,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -457,7 +457,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         return hostName;
     }
 
-    public void setHostName(String hostName) {
+    public void setHostName(final String hostName) {
         this.hostName = hostName;
     }
 

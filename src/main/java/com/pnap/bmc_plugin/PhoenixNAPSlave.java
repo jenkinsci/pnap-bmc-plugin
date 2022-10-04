@@ -57,10 +57,25 @@ import jenkins.model.Jenkins;
  */
 public final class PhoenixNAPSlave extends AbstractCloudSlave implements TrackedItem {
 
+    /**
+     *
+     */
     private static final int BUFFER_SIZE = 4;
+    /**
+     *
+     */
     private final ProvisioningActivity.Id provisioningId;
+    /**
+     *
+     */
     private final PhoenixNAPSlaveTemplate template;
+    /**
+     *
+     */
     private String provisionedServerID;
+    /**
+     *
+     */
     private String templateName;
 
     /*
@@ -69,6 +84,12 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
      * IOException { super(name, remoteFS, launcher);template; this.template =
      * this.provisioningId = provisioningId; // TODO Auto-generated constructor stub
      * }
+     */
+    /**
+     * Constructor for class PhoenixNAPSlave.
+     *
+     * @param template
+     * @throws Exception
      */
     public PhoenixNAPSlave(final PhoenixNAPSlaveTemplate template) throws Exception {
         super(template.getName(), template.resolveFS(), template.resolveLauncher());
@@ -87,6 +108,16 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         this.setRetentionStrategy(new PhoenixNAPRetentionStrategy(getIdleterminationTime()));
     }
 
+    /**
+     * Constructor for class PhoenixNAPSlave.
+     *
+     * @param name
+     * @param templateName
+     * @param numExecutors
+     * @param labelString
+     * @param provisionedServerID
+     * @throws Exception
+     */
     @DataBoundConstructor
     public PhoenixNAPSlave(final String name, final String templateName, final String numExecutors, final String labelString,
             final String provisionedServerID) throws Exception {
@@ -123,6 +154,11 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
             return false;
         }
 
+        /**
+         * Fills template names.
+         *
+         * @return ListBoxModel of template names.
+         */
         public ListBoxModel doFillTemplateNameItems() {
 
             ListBoxModel r = new ListBoxModel();
@@ -153,10 +189,25 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return provisioningId;
     }
 
+    /**
+     * Generates the server name.
+     *
+     * @param cloudName
+     * @param slaveName
+     * @return Generated server name.
+     */
     public String generateServerName(final String cloudName, final String slaveName) {
         return "jenkins" + "-" + cloudName + "-" + slaveName + "-" + UUID.randomUUID().toString();
     }
 
+    /**
+     * Provisions the server.
+     *
+     * @throws IllegalStateException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws ExecutionException
+     */
     public void provision() throws IllegalStateException, IOException, InterruptedException, ExecutionException {
         PNAPClientDTO dto = new PNAPClientDTO();
         dto.setAccessTokenURI("https://auth.phoenixnap.com/auth/realms/BMC/protocol/openid-connect/token");
@@ -202,6 +253,12 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
 
     }
 
+    /**
+     * Gets the ServerResponseDTO object.
+     *
+     * @return Gets the ServerResponseDTO object.
+     * @throws Exception
+     */
     public ServerResponseDTO getProvisionedServer() throws Exception {
         if (this.provisionedServerID != null && !"0".equals(this.provisionedServerID)) {
             PNAPClientDTO dto = new PNAPClientDTO();
@@ -250,6 +307,11 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         }
     }
 
+    /**
+     * Deletes the server.
+     *
+     * @throws IOException
+     */
     public void deleteServer() throws IOException {
 
         if (this.provisionedServerID != null && !"0".equals(this.provisionedServerID)) {
@@ -270,6 +332,11 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         }
     }
 
+    /**
+     * Gets the PhoenixNAPSlaveTemplate object.
+     *
+     * @return The PhoenixNAPSlaveTemplate object.
+     */
     public PhoenixNAPSlaveTemplate getTemplate() {
         return template;
     }
@@ -341,18 +408,38 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return null;
     }
 
+    /**
+     * Gets the template name.
+     *
+     * @return templateName
+     */
     public String getTemplateName() {
         return templateName;
     }
 
+    /**
+     * Sets the template name.
+     *
+     * @param templateName
+     */
     public void setTemplateName(final String templateName) {
         this.templateName = templateName;
     }
 
+    /**
+     * Gets the ID of provisioned server.
+     *
+     * @return provisionedServerID
+     */
     public String getProvisionedServerID() {
         return provisionedServerID;
     }
 
+    /**
+     * Sets the provisioned server ID.
+     *
+     * @param provisionedServerID
+     */
     public void setProvisionedServerID(final String provisionedServerID) {
         this.provisionedServerID = provisionedServerID;
     }

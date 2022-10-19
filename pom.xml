@@ -19,7 +19,7 @@
 
 		<!-- Baseline Jenkins version you use to build the plugin. Users must have 
 			this version or newer to run. -->
-		<jenkins.version>2.277.2</jenkins.version>
+		<jenkins.version>2.346.1</jenkins.version>
 		<java.level>8</java.level>
 		<gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
 	</properties>
@@ -31,8 +31,8 @@
 			<dependency>
 				<!-- Pick up common dependencies for the selected LTS line: https://github.com/jenkinsci/bom#usage -->
 				<groupId>io.jenkins.tools.bom</groupId>
-				<artifactId>bom-2.277.x</artifactId>
-				<version>25</version>
+				<artifactId>bom-2.346.x</artifactId>
+    			<version>1595.v8c71c13cc3a_9</version>
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
@@ -74,73 +74,28 @@
 		<dependency>
 			<groupId>org.jenkins-ci.plugins</groupId>
 			<artifactId>cloud-stats</artifactId>
-			<version>0.26</version>
+		    <version>0.26</version>
 		</dependency>
 		<dependency>
 			<groupId>com.pnap</groupId>
 			<artifactId>bmc-sdk</artifactId>
-			<version>0.1.0</version>
-<!-- 			<classifier>jar-with-dependencies</classifier> -->
+			<version>0.1.6</version>
+			<!-- <classifier>jar-with-dependencies</classifier> -->
 		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.11.4</version>
-		</dependency>
+		 <dependency>
+    		<groupId>org.jenkins-ci.plugins</groupId>
+    		<artifactId>jackson2-api</artifactId>
+		 </dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
-			<version>1.54</version>
+		 	<version>1.54</version>
 		</dependency>
-		
-		<!-- dependencies added  to satisfy enforcer rules-->
-		<dependency>
-	    <groupId>org.springframework.security</groupId>
-		<artifactId>spring-security-core</artifactId>
-		<version>5.4.4</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-config</artifactId>
-			<version>5.4.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
-			<version>5.4.4</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-core</artifactId>
-		    <version>5.3.5</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-context</artifactId>
-		    <version>5.3.5</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-beans</artifactId>
-		    <version>5.3.5</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-aop -->
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-aop</artifactId>
-		    <version>5.3.5</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework/spring-expression -->
-		<dependency>
-		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-expression</artifactId>
-		    <version>5.3.5</version>
-		</dependency>
+		<!-- <dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>2.0.0</version>
+		</dependency> -->
 			
 	</dependencies>
 
@@ -183,7 +138,7 @@
 				<groupId>org.jenkins-ci.tools</groupId>
 				<artifactId>maven-hpi-plugin</artifactId>
 				<configuration>
-<!-- 					<pluginFirstClassLoader>true</pluginFirstClassLoader> -->
+ 					 <pluginFirstClassLoader>true</pluginFirstClassLoader>
 				</configuration>
 			</plugin>
 			<!-- <plugin>

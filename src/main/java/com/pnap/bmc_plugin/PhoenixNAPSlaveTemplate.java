@@ -41,51 +41,51 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
      */
     private static final long serialVersionUID = 6637317957062974546L;
     /**
-     * name
+     * name.
      */
     private String name;
     /**
-     * hostName
+     * hostName.
      */
     private String hostName;
     /**
-     * location
+     * location.
      */
     private String location;
     /**
-     * sshPort
+     * sshPort.
      */
     private String sshPort;
     /**
-     * idleTerminationInMinutes
+     * idleTerminationInMinutes.
      */
     private String idleTerminationInMinutes = "10";
     /**
-     * type
+     * type.
      */
     private String type;
     /**
-     * operatingSystem
+     * operatingSystem.
      */
     private String operatingSystem;
     /**
-     * numExecutors
+     * numExecutors.
      */
     private String numExecutors = "1";
     /**
-     * labelString
+     * labelString.
      */
     private String labelString;
     /**
-     * labellessJobsAllowed
+     * labellessJobsAllowed.
      */
     private Boolean labellessJobsAllowed;
     /**
-     * credentialsId
+     * credentialsId.
      */
     private String credentialsId;
     /**
-     * sshCredentialsId
+     * sshCredentialsId.
      */
     private String sshCredentialsId;
 

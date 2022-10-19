@@ -2,6 +2,7 @@ package com.pnap.bmc_plugin;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
+import org.kohsuke.stapler.verb.POST;
 import org.springframework.security.oauth2.client.resource.OAuth2AccessDeniedException;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -29,7 +30,7 @@ public final class PhoenixNAPCloudCredentialsImpl extends BaseStandardCredential
     /**
      * clientSecret from BMC Portal Application credentials.
      */
-    private String clientSecret;
+    private Secret clientSecret;
 
     /**
      * @param scope
@@ -40,23 +41,23 @@ public final class PhoenixNAPCloudCredentialsImpl extends BaseStandardCredential
      */
     @DataBoundConstructor
     public PhoenixNAPCloudCredentialsImpl(final CredentialsScope scope, final String id, final String description,
-            final String clientID, final String clientSecret) {
+            final String clientID, final Secret clientSecret) {
         super(scope, id, description);
         // TODO Auto-generated constructor stub
         this.clientID = clientID;
-        this.clientSecret = getEncryptedValue(clientSecret);
+        this.clientSecret = clientSecret;
     }
 
     protected String getEncryptedValue(final String str) {
         return Secret.fromString(str).getEncryptedValue();
     }
 
-    protected String getPlainText(final String str) {
-        if (str != null) {
-            Secret secret = Secret.decrypt(str);
-            if (secret != null) {
+    protected String getPlainText(final Secret secret) {
+        if (secret != null) {
+            //Secret secret = Secret.decrypt(str);
+           // if (secret != null) {
                 return secret.getPlainText();
-            }
+            //}
         }
         return null;
     }
@@ -74,16 +75,15 @@ public final class PhoenixNAPCloudCredentialsImpl extends BaseStandardCredential
          * @param clientSecret
          * @return FormValidation
          */
+        @POST
         public FormValidation doTestConnection(@QueryParameter final String clientID,
                 @QueryParameter final String clientSecret) {
             try {
                 PNAPClientDTO dto = new PNAPClientDTO();
                 dto.setAccessTokenURI("https://auth.phoenixnap.com/auth/realms/BMC/protocol/openid-connect/token");
                 dto.setClientID(clientID);
-                System.out.println(clientID);
                 dto.setClientSecret(clientSecret);
-                System.out.println(Secret.toString(Secret.decrypt(clientSecret)));
-                System.out.println(clientSecret);
+                //System.out.println(Secret.toString(Secret.decrypt(clientSecret)));
                 dto.setApiBaseURL("https://api.phoenixnap.com/bmc/v1");
 
                 PNAPClient cl = new PNAPClient(dto);
@@ -91,7 +91,7 @@ public final class PhoenixNAPCloudCredentialsImpl extends BaseStandardCredential
                 String response = getServersComand.execute();
                 ServersResponseDTO servers = new ServersResponseDTO();
                 servers.fromString(response);
-                System.out.println(response);
+                //System.out.println(response);
                 return FormValidation.ok("Connection succesfully established.");
             } catch (OAuth2AccessDeniedException e) {
                 return FormValidation.error("Connection can not be established, please check the credentials.");
@@ -121,14 +121,14 @@ public final class PhoenixNAPCloudCredentialsImpl extends BaseStandardCredential
     /**
      * @return clientSecret.
      */
-    public String getClientSecret() {
-        return getPlainText(clientSecret);
+    public Secret getClientSecret() {
+        return clientSecret;
     }
 
     /**
      * @param clientSecret
      */
-    public void setClientSecret(final String clientSecret) {
+    public void setClientSecret(final Secret clientSecret) {
         this.clientSecret = clientSecret;
     }
 

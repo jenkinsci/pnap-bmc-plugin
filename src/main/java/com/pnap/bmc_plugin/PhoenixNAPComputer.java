@@ -15,17 +15,17 @@ import com.pnap.bmc_sdk.dto.ServerResponseDTO;
 
 import hudson.slaves.AbstractCloudComputer;
 
-public class PhoenixNAPComputer extends AbstractCloudComputer<PhoenixNAPSlave> implements TrackedItem {
+public class PhoenixNAPComputer extends AbstractCloudComputer<PhoenixNAPAgent> implements TrackedItem {
 
-//private PhoenixNAPSlave slave;
+
 
     /**
      * Creates new instance of PhoenixNAPComputer.
      *
-     * @param slave
+     * @param agent
      */
-    public PhoenixNAPComputer(final PhoenixNAPSlave slave) {
-        super(slave);
+    public PhoenixNAPComputer(final PhoenixNAPAgent agent) {
+        super(agent);
     }
 
     /**
@@ -35,7 +35,7 @@ public class PhoenixNAPComputer extends AbstractCloudComputer<PhoenixNAPSlave> i
      */
     @Override
     public Id getId() {
-        PhoenixNAPSlave node = getNode();
+        PhoenixNAPAgent node = getNode();
         if (node != null) {
             return node.getId();
         }
@@ -51,7 +51,7 @@ public class PhoenixNAPComputer extends AbstractCloudComputer<PhoenixNAPSlave> i
         checkPermission(DELETE);
         try {
 
-            PhoenixNAPSlave node = getNode();
+            PhoenixNAPAgent node = getNode();
 
             ServerResponseDTO server = null;
             if (node != null) {

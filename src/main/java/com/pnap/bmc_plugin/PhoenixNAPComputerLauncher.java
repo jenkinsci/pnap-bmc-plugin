@@ -142,7 +142,7 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
         PrintStream logger = listener.getLogger();
 
         if (!(ccomputer instanceof PhoenixNAPComputer)) {
-            logger.println("Cannot handle slave not instance of PhoenixNAP Computer.");
+            logger.println("Cannot handle, agent not instance of PhoenixNAP Computer.");
             return;
         }
         PhoenixNAPComputer phoenixNAPComputer = (PhoenixNAPComputer) ccomputer;
@@ -152,14 +152,14 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
         final Connection conn;
         Connection cleanupConn = null;
         boolean successful = false;
-        PhoenixNAPSlave node = null;
+        PhoenixNAPAgent node = null;
         try {
             conn = getSSHConnection(phoenixNAPComputer, listener);
             cleanupConn = conn;
             node = phoenixNAPComputer.getNode();
 
             if (node == null) {
-                throw new Exception("PhoenixNAPSlave is null.");
+                throw new Exception("PhoenixNAPAgent is null.");
             }
             SSHUserPrivateKey sshCredentials = getSshCredentials(node.getTemplate().getSshCredentialsId());
             if (sshCredentials == null) {
@@ -213,7 +213,7 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
      * @param node
      * Removes PhoenixNAP node.
      */
-    private void deprovisionNode(final PrintStream logger, final PhoenixNAPSlave node) {
+    private void deprovisionNode(final PrintStream logger, final PhoenixNAPAgent node) {
         try {
             node.deleteServer();
             Jenkins.get().removeNode(node);
@@ -230,7 +230,7 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
      */
     public Connection getSSHConnection(final PhoenixNAPComputer computer, final TaskListener listener) {
 
-        PhoenixNAPSlave node = computer.getNode();
+        PhoenixNAPAgent node = computer.getNode();
         PhoenixNAPCloud cloud = getCloud(node);
         final long timeout = TimeUnit.MINUTES.toMillis(Integer.parseInt(cloud.getTimeoutMinutes()));
         final long startTime = System.currentTimeMillis();
@@ -282,7 +282,7 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
 
     }
 
-    private PhoenixNAPCloud getCloud(final PhoenixNAPSlave node) throws CloudNotFoundException {
+    private PhoenixNAPCloud getCloud(final PhoenixNAPAgent node) throws CloudNotFoundException {
         try {
             PhoenixNAPCloud cloud = node.getTemplate().getCloud();
             return cloud;
@@ -292,7 +292,7 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
 
     }
 
-    private ServerResponseDTO getServer(final PhoenixNAPSlave node) throws ServerNotFoundException {
+    private ServerResponseDTO getServer(final PhoenixNAPAgent node) throws ServerNotFoundException {
         ServerResponseDTO server;
         try {
             server = node.getProvisionedServer();

@@ -4,7 +4,7 @@
 
   
   <f:entry title="Client ID" field="clientID">
-    <f:secretTextarea />
+    <f:textbox />
   </f:entry>
   <f:entry title="Client Secret" field="clientSecret">
     <f:secretTextarea />
@@ -12,5 +12,5 @@
   
   <st:include page="id-and-description" class="${descriptor.clazz}"/>
 
-  <f:validateButton title="Test Connection" method="testConnection" with="clientID,clientSecret" />
+  <f:validateButton title="Test Connection" checkMethod="post" method="testConnection" with="clientID,clientSecret" />
 </j:jelly>

@@ -1,6 +1,9 @@
 package com.pnap.bmc_plugin;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +23,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import hudson.Extension;
 import hudson.model.Computer;
 import hudson.model.Descriptor;
+import hudson.model.Failure;
 import hudson.model.Label;
 import hudson.model.Descriptor.FormException;
 import hudson.slaves.Cloud;
@@ -27,6 +31,7 @@ import hudson.slaves.NodeProvisioner;
 import hudson.slaves.NodeProvisioner.PlannedNode;
 import hudson.util.FormValidation;
 import hudson.util.HttpResponses;
+import jenkins.model.Jenkins;
 
 /**
  * @author pavlej
@@ -49,7 +54,7 @@ public final class PhoenixNAPCloud extends Cloud {
     /**
      * List of the templates for phoenixNAP cloud.
      */
-    private List<PhoenixNAPSlaveTemplate> templates = Collections.emptyList();
+    private List<PhoenixNAPAgentTemplate> templates = Collections.emptyList();
 
     /**
      *
@@ -70,10 +75,9 @@ public final class PhoenixNAPCloud extends Cloud {
      */
     @DataBoundConstructor
     public PhoenixNAPCloud(final String name, final String instanceCap, final String timeoutMinutes,
-            final String connectionRetryWait, final List<PhoenixNAPSlaveTemplate> templates) {
+            final String connectionRetryWait, final List<PhoenixNAPAgentTemplate> templates) {
         super(name);
-
-        LOGGER.log(Level.INFO, "Constructing new PhoenixNAPCloud(name = {0} instanceCap = {1}, ...)",
+        LOGGER.log(Level.FINE, "Constructing new PhoenixNAPCloud(name = {0} instanceCap = {1}, ...)",
                 new Object[] {name, instanceCap});
 
         this.instanceCap = instanceCap;
@@ -86,7 +90,7 @@ public final class PhoenixNAPCloud extends Cloud {
             this.templates = templates;
         }
 
-        LOGGER.info("Creating PhoenixNAPCloud cloud with " + this.templates.size() + " templates");
+        LOGGER.fine("Creating PhoenixNAPCloud cloud with " + this.templates.size() + " templates");
     }
 
     /*
@@ -99,16 +103,16 @@ public final class PhoenixNAPCloud extends Cloud {
     public Collection<PlannedNode> provision(final CloudState state, final int excessWorkload) {
         try {
             int excessWL = excessWorkload;
-            System.out.println("new provisioning started " + state.getLabel());
+            LOGGER.fine("New provisioning started " + state.getLabel());
             List<NodeProvisioner.PlannedNode> provisioningNodes = new ArrayList<>();
             while (excessWL > 0) {
-                final PhoenixNAPSlaveTemplate template = getTemplates(state.getLabel()).get(0);
+                final PhoenixNAPAgentTemplate template = getTemplates(state.getLabel()).get(0);
 
-                final PhoenixNAPSlave slave = new PhoenixNAPSlave(template);
-                provisioningNodes.add(new TrackedPlannedNode(slave.getId(),
+                final PhoenixNAPAgent agent = new PhoenixNAPAgent(template);
+                provisioningNodes.add(new TrackedPlannedNode(agent.getId(),
                         Integer.parseInt(template.getNumExecutors()), Computer.threadPoolForRemoting.submit(() -> {
-                            slave.provision();
-                            return slave;
+                            agent.provision();
+                            return agent;
                         })));
                 excessWL -= Integer.parseInt(template.getNumExecutors());
                 return provisioningNodes;
@@ -136,11 +140,12 @@ public final class PhoenixNAPCloud extends Cloud {
      */
     @RequirePOST
     public HttpResponse doProvision(final @QueryParameter String template) throws Exception {
-        System.out.println("new provisioning started " + template);
-        final PhoenixNAPSlaveTemplate tplPnap = getTemplate(template);
+        Jenkins.get().checkPermission(Jenkins.ADMINISTER);
+        //System.out.println("new provisioning started " + template);
+        final PhoenixNAPAgentTemplate tplPnap = getTemplate(template);
 
-        PhoenixNAPSlave slave = new PhoenixNAPSlave(tplPnap);
-        slave.provision();
+        PhoenixNAPAgent agent = new PhoenixNAPAgent(tplPnap);
+        agent.provision();
         return HttpResponses.redirectViaContextPath("/computer/");
         // return null;
     }
@@ -168,7 +173,7 @@ public final class PhoenixNAPCloud extends Cloud {
         // This also doesn't take into account the actual capacity, as that too gets
         // checked during provision.
         boolean can = !getTemplates(state.getLabel()).isEmpty();
-        LOGGER.log(Level.INFO, "canProvision  " + state.getLabel() + " :: " + can);
+        LOGGER.log(Level.FINE, "canProvision  " + state.getLabel() + " :: " + can);
         return can;
         // return true;
     }
@@ -201,6 +206,11 @@ public final class PhoenixNAPCloud extends Cloud {
             if (value == null || "".equals(value)) {
                 return FormValidation.error("Must not be empty!");
             } else {
+                try {
+                    Jenkins.checkGoodName(value);
+                } catch (Failure e) {
+                    return FormValidation.error(e.getMessage());
+                }
                 return FormValidation.ok();
             }
         }
@@ -257,10 +267,10 @@ public final class PhoenixNAPCloud extends Cloud {
         }
     }
 
-    private List<PhoenixNAPSlaveTemplate> getTemplates(final Label label) {
-        List<PhoenixNAPSlaveTemplate> matchingTemplates = new ArrayList<>();
+    private List<PhoenixNAPAgentTemplate> getTemplates(final Label label) {
+        List<PhoenixNAPAgentTemplate> matchingTemplates = new ArrayList<>();
 
-        for (PhoenixNAPSlaveTemplate t : templates) {
+        for (PhoenixNAPAgentTemplate t : templates) {
             if ((label == null && t.getLabelString().isEmpty()) || (label == null && t.getLabellessJobsAllowed())
             // TODO CHECK THIS
                     || // TODO CHECK THIS
@@ -272,10 +282,10 @@ public final class PhoenixNAPCloud extends Cloud {
         return matchingTemplates;
     }
 
-    private PhoenixNAPSlaveTemplate getTemplate(final String name) throws Exception {
-        // List<PhoenixNAPSlaveTemplate> matchingTemplates = new ArrayList<>();
+    private PhoenixNAPAgentTemplate getTemplate(final String name) throws Exception {
+        // List<PhoenixNAPAgentTemplate> matchingTemplates = new ArrayList<>();
 
-        for (PhoenixNAPSlaveTemplate t : templates) {
+        for (PhoenixNAPAgentTemplate t : templates) {
             if (t.getName().equals(name)) {
                 return t;
             }
@@ -289,6 +299,20 @@ public final class PhoenixNAPCloud extends Cloud {
      */
     public String getName() {
         return name;
+        //return getUrlEncodedName();
+    }
+
+    /**
+     * @return name
+     */
+    public String getUrlEncodedName() {
+        String urlEncoded;
+        try {
+            urlEncoded = URLEncoder.encode(name, StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+           urlEncoded = name;
+        }
+        return urlEncoded;
     }
 
     /**
@@ -315,7 +339,7 @@ public final class PhoenixNAPCloud extends Cloud {
     /**
      * @return templates
      */
-    public List<PhoenixNAPSlaveTemplate> getTemplates() {
+    public List<PhoenixNAPAgentTemplate> getTemplates() {
         return templates;
     }
 
@@ -343,7 +367,7 @@ public final class PhoenixNAPCloud extends Cloud {
     /**
      * @param templates
      */
-    public void setTemplates(final List<PhoenixNAPSlaveTemplate> templates) {
+    public void setTemplates(final List<PhoenixNAPAgentTemplate> templates) {
         this.templates = templates;
     }
 

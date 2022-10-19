@@ -18,7 +18,7 @@
         <f:textbox default="10"/>
     </f:entry>
 
-    <f:entry title="Templates" description="List of templates which can be launched as slaves">
+    <f:entry title="Templates" description="List of templates which can be launched as agents">
         <!-- Defines a header so the repeats can be re-ordered -->
         <f:repeatableProperty field="templates" header="Template">
             <f:entry title="">

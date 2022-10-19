@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.ByteBuffer;
-import java.security.Security;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +16,6 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMDecryptorProvider;
 import org.bouncycastle.openssl.PEMEncryptedKeyPair;
 import org.bouncycastle.openssl.PEMKeyPair;
@@ -55,7 +53,7 @@ import jenkins.model.Jenkins;
  * @author pavlej
  *
  */
-public final class PhoenixNAPSlave extends AbstractCloudSlave implements TrackedItem {
+public final class PhoenixNAPAgent extends AbstractCloudSlave implements TrackedItem {
 
     /**
      * BUFFER_SIZE.
@@ -66,9 +64,9 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
      */
     private final ProvisioningActivity.Id provisioningId;
     /**
-     * PhoenixNAPSlaveTemplate.
+     * PhoenixNAPAgentTemplate.
      */
-    private final PhoenixNAPSlaveTemplate template;
+    private final PhoenixNAPAgentTemplate template;
     /**
      * provisionedServerID.
      */
@@ -79,19 +77,19 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
     private String templateName;
 
     /*
-     * public PhoenixNAPSlave(String name, String remoteFS, ComputerLauncher
+     * public PhoenixNAPAgent(String name, String remoteFS, ComputerLauncher
      * launcher, ProvisioningActivity.Id provisioningId) throws FormException,
      * IOException { super(name, remoteFS, launcher);template; this.template =
      * this.provisioningId = provisioningId; // TODO Auto-generated constructor stub
      * }
      */
     /**
-     * Constructor for class PhoenixNAPSlave.
+     * Constructor for class PhoenixNAPAgent.
      *
      * @param template
      * @throws Exception
      */
-    public PhoenixNAPSlave(final PhoenixNAPSlaveTemplate template) throws Exception {
+    public PhoenixNAPAgent(final PhoenixNAPAgentTemplate template) throws Exception {
         super(template.getName(), template.resolveFS(), template.resolveLauncher());
 
         String serverName = generateServerName(template.getCloud().getName(), template.getName());
@@ -109,7 +107,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
     }
 
     /**
-     * Constructor for class PhoenixNAPSlave.
+     * Constructor for class PhoenixNAPAgent.
      *
      * @param name
      * @param templateName
@@ -119,7 +117,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
      * @throws Exception
      */
     @DataBoundConstructor
-    public PhoenixNAPSlave(final String name, final String templateName, final String numExecutors, final String labelString,
+    public PhoenixNAPAgent(final String name, final String templateName, final String numExecutors, final String labelString,
             final String provisionedServerID) throws Exception {
         super(name, getTemplateByName(templateName).resolveFS(), getTemplateByName(templateName).resolveLauncher());
         this.template = getTemplateByName(templateName);
@@ -146,7 +144,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         @Nonnull
         @Override
         public String getDisplayName() {
-            return "phoenixNAP Slave";
+            return "phoenixNAP Agent";
         }
 
         @Override
@@ -167,9 +165,9 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
             for (Cloud cloud : clouds) {
 
                 if (cloud instanceof PhoenixNAPCloud) {
-                    List<PhoenixNAPSlaveTemplate> templates = ((PhoenixNAPCloud) cloud).getTemplates();
-                    for (PhoenixNAPSlaveTemplate phoenixNAPSlaveTemplate : templates) {
-                        r.add(phoenixNAPSlaveTemplate.getName(), phoenixNAPSlaveTemplate.getName());
+                    List<PhoenixNAPAgentTemplate> templates = ((PhoenixNAPCloud) cloud).getTemplates();
+                    for (PhoenixNAPAgentTemplate phoenixNAPAgentTemplate : templates) {
+                        r.add(phoenixNAPAgentTemplate.getName(), phoenixNAPAgentTemplate.getName());
                     }
                 }
             }
@@ -178,13 +176,12 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
     }
 
     @Override
-    public AbstractCloudComputer<PhoenixNAPSlave> createComputer() {
+    public AbstractCloudComputer<PhoenixNAPAgent> createComputer() {
         return new PhoenixNAPComputer(this);
     }
 
     @Override
     public Id getId() {
-        System.out.println("Provisioning id called! " + provisioningId);
         // TODO Auto-generated method stub
         return provisioningId;
     }
@@ -193,11 +190,11 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
      * Generates the server name.
      *
      * @param cloudName
-     * @param slaveName
+     * @param agentName
      * @return Generated server name.
      */
-    public String generateServerName(final String cloudName, final String slaveName) {
-        return "jenkins" + "-" + cloudName + "-" + slaveName + "-" + UUID.randomUUID().toString();
+    public String generateServerName(final String cloudName, final String agentName) {
+        return "jenkins" + "-" + cloudName + "-" + agentName + "-" + UUID.randomUUID().toString();
     }
 
     /**
@@ -217,7 +214,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
             throw new IOException("Credentials are null for template.");
         }
         dto.setClientID(credentials.getClientID());
-        dto.setClientSecret(credentials.getClientSecret());
+        dto.setClientSecret(Secret.toString(credentials.getClientSecret()));
         dto.setApiBaseURL("https://api.phoenixnap.com/bmc/v1");
 
         PNAPClient cl = new PNAPClient(dto);
@@ -268,7 +265,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
                 throw new Exception("Credentials are null for template.");
             }
             dto.setClientID(credentials.getClientID());
-            dto.setClientSecret(credentials.getClientSecret());
+            dto.setClientSecret(Secret.toString(credentials.getClientSecret()));
             dto.setApiBaseURL("https://api.phoenixnap.com/bmc/v1");
             PNAPClient cl = new PNAPClient(dto);
             GetServerCommand getServerComand = new GetServerCommand(cl, provisionedServerID);
@@ -322,22 +319,21 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
                 throw new IOException("Credentials are null for template.");
             }
             dto.setClientID(credentials.getClientID());
-            dto.setClientSecret(credentials.getClientSecret());
+            dto.setClientSecret(Secret.toString(credentials.getClientSecret()));
             dto.setApiBaseURL("https://api.phoenixnap.com/bmc/v1");
             PNAPClient cl = new PNAPClient(dto);
             DeleteServerCommand deleteServerComand = new DeleteServerCommand(cl, provisionedServerID);
-            String response = deleteServerComand.execute();
+           /* String response = */deleteServerComand.execute();
             this.provisionedServerID = "0";
-            System.out.println(response);
         }
     }
 
     /**
-     * Gets the PhoenixNAPSlaveTemplate object.
+     * Gets the PhoenixNAPAgentTemplate object.
      *
-     * @return The PhoenixNAPSlaveTemplate object.
+     * @return The PhoenixNAPAgentTemplate object.
      */
-    public PhoenixNAPSlaveTemplate getTemplate() {
+    public PhoenixNAPAgentTemplate getTemplate() {
         return template;
     }
 
@@ -353,7 +349,7 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
             keyPair = (PEMKeyPair) keyObj;
         } else {
             // We need id_hmacWithSHA3_224 for encrypted ssh keys
-            Security.addProvider(new BouncyCastleProvider());
+            //Security.addProvider(new BouncyCastleProvider());
             PEMEncryptedKeyPair encKeyPair = (PEMEncryptedKeyPair) keyObj;
             PEMDecryptorProvider decryptionProv = new JcePEMDecryptorProviderBuilder().setProvider("BC")
                     .build(privateSshKeyPassphrase.toCharArray());
@@ -391,16 +387,16 @@ public final class PhoenixNAPSlave extends AbstractCloudSlave implements Tracked
         return os.toByteArray();
     }
 
-    private static PhoenixNAPSlaveTemplate getTemplateByName(final String templateName) {
+    private static PhoenixNAPAgentTemplate getTemplateByName(final String templateName) {
         final List<Cloud> clouds = Jenkins.get().clouds;
         // Cloud cloud = clouds.getCloud(name);
         for (Cloud cloud : clouds) {
 
             if (cloud instanceof PhoenixNAPCloud) {
-                List<PhoenixNAPSlaveTemplate> templates = ((PhoenixNAPCloud) cloud).getTemplates();
-                for (PhoenixNAPSlaveTemplate phoenixNAPSlaveTemplate : templates) {
-                    if (phoenixNAPSlaveTemplate.getName().equals(templateName)) {
-                        return phoenixNAPSlaveTemplate;
+                List<PhoenixNAPAgentTemplate> templates = ((PhoenixNAPCloud) cloud).getTemplates();
+                for (PhoenixNAPAgentTemplate phoenixNAPAgentTemplate : templates) {
+                    if (phoenixNAPAgentTemplate.getName().equals(templateName)) {
+                        return phoenixNAPAgentTemplate;
                     }
                 }
             }

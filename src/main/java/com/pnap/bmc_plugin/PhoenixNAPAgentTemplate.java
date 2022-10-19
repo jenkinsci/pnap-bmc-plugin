@@ -34,7 +34,7 @@ import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 
-public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlaveTemplate>, Serializable {
+public final class PhoenixNAPAgentTemplate implements Describable<PhoenixNAPAgentTemplate>, Serializable {
 
     /**
      *
@@ -92,10 +92,10 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
     /**
      *
      */
-    private static final Logger LOGGER = Logger.getLogger(PhoenixNAPSlaveTemplate.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(PhoenixNAPAgentTemplate.class.getName());
 
     /**
-     * Constructor for class PhoenixNAPSlaveTemplate.
+     * Constructor for class PhoenixNAPAgentTemplate.
      *
      * @param name
      * @param hostName
@@ -111,11 +111,11 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
      * @param sshCredentialsId
      */
     @DataBoundConstructor
-    public PhoenixNAPSlaveTemplate(final String name, final String hostName, final String location, final String type, final String operatingSystem,
+    public PhoenixNAPAgentTemplate(final String name, final String hostName, final String location, final String type, final String operatingSystem,
             final String sshPort, final String idleTerminationInMinutes, final String numExecutors, final String labelString,
             final Boolean labellessJobsAllowed, final String credentialsId, final String sshCredentialsId) {
 
-        LOGGER.log(Level.INFO, "Creating PhoenixNAPSlaveTemplate with name = {0}, location = {1}, type = {2}",
+        LOGGER.log(Level.FINE, "Creating PhoenixNAPAgentTemplate with name = {0}, location = {1}, type = {2}",
                 new Object[] {name, location, type});
 
         this.name = name;
@@ -135,12 +135,12 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
 
     @SuppressWarnings("unchecked")
     @Override
-    public Descriptor<PhoenixNAPSlaveTemplate> getDescriptor() {
+    public Descriptor<PhoenixNAPAgentTemplate> getDescriptor() {
         return Jenkins.get().getDescriptor(getClass());
     }
 
     @Extension
-    public static final class DescriptorImpl extends Descriptor<PhoenixNAPSlaveTemplate> {
+    public static final class DescriptorImpl extends Descriptor<PhoenixNAPAgentTemplate> {
         /**
          *
          */
@@ -156,7 +156,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         @Nonnull
         @Override
         public String getDisplayName() {
-            return "phoenixNAP Slave Template";
+            return "phoenixNAP Agent Template";
         }
 
         /**
@@ -548,9 +548,9 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         for (Cloud cloud : clouds) {
 
             if (cloud instanceof PhoenixNAPCloud) {
-                List<PhoenixNAPSlaveTemplate> templates = ((PhoenixNAPCloud) cloud).getTemplates();
-                for (PhoenixNAPSlaveTemplate phoenixNAPSlaveTemplate : templates) {
-                    if (this.equals(phoenixNAPSlaveTemplate)) {
+                List<PhoenixNAPAgentTemplate> templates = ((PhoenixNAPCloud) cloud).getTemplates();
+                for (PhoenixNAPAgentTemplate phoenixNAPAgentTemplate : templates) {
+                    if (this.equals(phoenixNAPAgentTemplate)) {
                         return (PhoenixNAPCloud) cloud;
                     }
                 }
@@ -614,7 +614,7 @@ public final class PhoenixNAPSlaveTemplate implements Describable<PhoenixNAPSlav
         if (getClass() != obj.getClass()) {
             return false;
         }
-        PhoenixNAPSlaveTemplate other = (PhoenixNAPSlaveTemplate) obj;
+        PhoenixNAPAgentTemplate other = (PhoenixNAPAgentTemplate) obj;
         if (credentialsId == null) {
             if (other.credentialsId != null) {
                 return false;

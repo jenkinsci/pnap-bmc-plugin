@@ -58,23 +58,23 @@ import jenkins.model.Jenkins;
 public final class PhoenixNAPSlave extends AbstractCloudSlave implements TrackedItem {
 
     /**
-     *
+     * BUFFER_SIZE
      */
     private static final int BUFFER_SIZE = 4;
     /**
-     *
+     * ProvisioningActivity Id
      */
     private final ProvisioningActivity.Id provisioningId;
     /**
-     *
+     * PhoenixNAPSlaveTemplate
      */
     private final PhoenixNAPSlaveTemplate template;
     /**
-     *
+     * provisionedServerID
      */
     private String provisionedServerID;
     /**
-     *
+     * templateName
      */
     private String templateName;
 

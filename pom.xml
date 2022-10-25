@@ -87,9 +87,15 @@
     		<artifactId>jackson2-api</artifactId>
 		 </dependency>
 		<dependency>
-			<groupId>org.jenkins-ci.plugins</groupId>
-    		<artifactId>bouncycastle-api</artifactId>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk15on</artifactId>
+		 	<version>1.54</version>
 		</dependency>
+		<!-- <dependency>
+			<groupId>jakarta.annotation</groupId>
+			<artifactId>jakarta.annotation-api</artifactId>
+			<version>2.0.0</version>
+		</dependency> -->
 			
 	</dependencies>
 
@@ -132,9 +138,13 @@
 			<groupId>org.jenkins-ci.tools</groupId>
 			<artifactId>maven-hpi-plugin</artifactId>
 			<configuration>
-				 <!-- <pluginFirstClassLoader>true</pluginFirstClassLoader> -->
+				<!-- <pluginFirstClassLoader>true</pluginFirstClassLoader> -->
 			</configuration>
 		</plugin>
+		<!-- <plugin> <groupId>org.openrewrite.maven</groupId> <artifactId>rewrite-maven-plugin</artifactId> 
+			<version>4.20.0</version> <configuration> <activeRecipes> <recipe>org.openrewrite.java.cleanup.Cleanup</recipe> 
+			</activeRecipes> <checkstyleConfigFile>C:\Users\pavlej\work\Code\Code\pnap-bmc-jenkins-plugin\src\main\resources\checkstyle-pnap.xml</checkstyleConfigFile> 
+			</configuration> </plugin> -->
 		<plugin>
 			<groupId>org.apache.maven.plugins</groupId>
 			<artifactId>maven-checkstyle-plugin</artifactId>

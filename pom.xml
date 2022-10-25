@@ -132,7 +132,7 @@
 			<groupId>org.jenkins-ci.tools</groupId>
 			<artifactId>maven-hpi-plugin</artifactId>
 			<configuration>
-				<!-- <pluginFirstClassLoader>true</pluginFirstClassLoader> -->
+				<pluginFirstClassLoader>true</pluginFirstClassLoader>
 			</configuration>
 		</plugin>
 		<!-- <plugin> <groupId>org.openrewrite.maven</groupId> <artifactId>rewrite-maven-plugin</artifactId> 

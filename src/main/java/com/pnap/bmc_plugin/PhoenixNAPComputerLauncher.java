@@ -70,7 +70,7 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
     /**
      * VALID_VERSIONS.
      */
-    private static final List<String> VALID_VERSIONS = Arrays.asList("1.8", "1.9");
+    private static final List<String> VALID_VERSIONS = Arrays.asList(/*"1.8", "1.9",*/ "11");
 
     private abstract class JavaInstaller {
         protected abstract String getInstallCommand(String javaVersion);
@@ -116,7 +116,8 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
                 }
 
                 private String getPackageName(final String javaVersion) {
-                    return "openjdk-" + javaVersion.replaceFirst("1.", "") + "-jre-headless";
+                    //String s = "openjdk-" + javaVersion.replaceFirst("1.", "") + "-jre-headless";
+                    return "openjdk-" + javaVersion + "-jre-headless";
                 }
             });
             add(new JavaInstaller() { // yum

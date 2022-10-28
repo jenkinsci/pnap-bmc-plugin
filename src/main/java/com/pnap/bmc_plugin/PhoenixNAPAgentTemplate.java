@@ -220,7 +220,7 @@ public final class PhoenixNAPAgentTemplate implements Describable<PhoenixNAPAgen
 
             operatingSystem.add("ubuntu/bionic", "ubuntu/bionic");
             operatingSystem.add("centos/centos7", "centos/centos7");
-            operatingSystem.add("windows/srv2019std", "windows/srv2019std");
+            //operatingSystem.add("windows/srv2019std", "windows/srv2019std");
 
             return operatingSystem;
         }

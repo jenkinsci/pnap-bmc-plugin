@@ -1,4 +1,4 @@
-package com.pnap.bmc_plugin;
+package io.jenkins.plugins.pnap_bmc;
 
 import java.io.IOException;
 

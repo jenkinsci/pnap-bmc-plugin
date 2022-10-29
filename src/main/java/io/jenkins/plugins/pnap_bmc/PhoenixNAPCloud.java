@@ -1,4 +1,4 @@
-package com.pnap.bmc_plugin;
+package io.jenkins.plugins.pnap_bmc;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -46,7 +46,7 @@ public final class PhoenixNAPCloud extends Cloud {
     /**
      *
      */
-    private String timeoutMinutes = "5";
+    private String timeoutMinutes = "15";
     /**
      *
      */
@@ -142,6 +142,7 @@ public final class PhoenixNAPCloud extends Cloud {
     public HttpResponse doProvision(final @QueryParameter String template) throws Exception {
         Jenkins.get().checkPermission(Jenkins.ADMINISTER);
         //System.out.println("new provisioning started " + template);
+        LOGGER.fine("New provisioning started " + template);
         final PhoenixNAPAgentTemplate tplPnap = getTemplate(template);
 
         PhoenixNAPAgent agent = new PhoenixNAPAgent(tplPnap);

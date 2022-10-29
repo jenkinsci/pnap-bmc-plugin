@@ -1,4 +1,4 @@
-package com.pnap.bmc_plugin;
+package io.jenkins.plugins.pnap_bmc;
 
 import static java.lang.String.format;
 
@@ -25,9 +25,6 @@ import com.cloudbees.jenkins.plugins.sshcredentials.SSHUserPrivateKey;
 import com.cloudbees.plugins.credentials.CredentialsMatchers;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.google.common.base.Strings;
-import com.pnap.bmc_plugin.exception.CloudNotFoundException;
-import com.pnap.bmc_plugin.exception.NodeNotFoundException;
-import com.pnap.bmc_plugin.exception.ServerNotFoundException;
 import com.pnap.bmc_sdk.dto.ServerResponseDTO;
 import com.trilead.ssh2.Connection;
 import com.trilead.ssh2.SCPClient;
@@ -39,6 +36,9 @@ import hudson.security.ACL;
 import hudson.slaves.ComputerLauncher;
 import hudson.slaves.SlaveComputer;
 import hudson.util.Secret;
+import io.jenkins.plugins.pnap_bmc.exception.CloudNotFoundException;
+import io.jenkins.plugins.pnap_bmc.exception.NodeNotFoundException;
+import io.jenkins.plugins.pnap_bmc.exception.ServerNotFoundException;
 import jenkins.model.Jenkins;
 
 /**
@@ -132,7 +132,7 @@ public final class PhoenixNAPComputerLauncher extends ComputerLauncher {
                 }
 
                 private String getPackageName(final String javaVersion) {
-                    return "java-" + javaVersion + ".0-openjdk-headless";
+                    return "java-" + javaVersion + "-openjdk-headless";
                 }
             });
         }

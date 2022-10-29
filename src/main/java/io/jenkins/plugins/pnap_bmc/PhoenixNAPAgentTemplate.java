@@ -1,4 +1,4 @@
-package com.pnap.bmc_plugin;
+package io.jenkins.plugins.pnap_bmc;
 
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.anyOf;
 import static com.cloudbees.plugins.credentials.CredentialsMatchers.instanceOf;
@@ -59,7 +59,7 @@ public final class PhoenixNAPAgentTemplate implements Describable<PhoenixNAPAgen
     /**
      * idleTerminationInMinutes.
      */
-    private String idleTerminationInMinutes = "10";
+    private String idleTerminationInMinutes = "60";
     /**
      * type.
      */
@@ -219,7 +219,9 @@ public final class PhoenixNAPAgentTemplate implements Describable<PhoenixNAPAgen
             ListBoxModel operatingSystem = new ListBoxModel();
 
             operatingSystem.add("ubuntu/bionic", "ubuntu/bionic");
+            operatingSystem.add("ubuntu/focal", "ubuntu/focal");
             operatingSystem.add("centos/centos7", "centos/centos7");
+            operatingSystem.add("centos/centos8", "centos/centos8");
             //operatingSystem.add("windows/srv2019std", "windows/srv2019std");
 
             return operatingSystem;

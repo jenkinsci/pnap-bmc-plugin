@@ -1,6 +1,6 @@
-package com.pnap.bmc_plugin.exception;
+package io.jenkins.plugins.pnap_bmc.exception;
 
-public class ServerNotFoundException extends Exception {
+public class CloudNotFoundException extends RuntimeException {
     /**
      *
      */
@@ -9,13 +9,13 @@ public class ServerNotFoundException extends Exception {
     /**
      *
      */
-    public ServerNotFoundException() {
+    public CloudNotFoundException() {
     }
 
     /**
      * @param message
      */
-    public ServerNotFoundException(final String message) {
+    public CloudNotFoundException(final String message) {
         super(message);
     }
 
@@ -23,14 +23,14 @@ public class ServerNotFoundException extends Exception {
      * @param message
      * @param cause
      */
-    public ServerNotFoundException(final String message, final Throwable cause) {
+    public CloudNotFoundException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
     /**
      * @param cause
      */
-    public ServerNotFoundException(final Throwable cause) {
+    public CloudNotFoundException(final Throwable cause) {
         super(cause);
     }
 
@@ -40,7 +40,7 @@ public class ServerNotFoundException extends Exception {
      * @param enableSuppression
      * @param writableStackTrace
      */
-    public ServerNotFoundException(final String message, final Throwable cause, final boolean enableSuppression,
+    public CloudNotFoundException(final String message, final Throwable cause, final boolean enableSuppression,
             final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }

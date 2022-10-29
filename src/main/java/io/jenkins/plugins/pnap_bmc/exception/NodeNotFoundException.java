@@ -1,4 +1,4 @@
-package com.pnap.bmc_plugin.exception;
+package io.jenkins.plugins.pnap_bmc.exception;
 
 public class NodeNotFoundException extends Exception {
     /**
